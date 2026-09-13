@@ -29,12 +29,19 @@ nach Geschäft oder nach Rezept sortieren.
 
 ### 1. Supabase-Projekt anlegen
 
+Ausführlich in **[`docs/supabase-einrichten.md`](docs/supabase-einrichten.md)** –
+zehn Schritte vom Konto bis zur installierten App, mit Prüfskript und
+Fehlerbehebung. Kurzfassung:
+
 1. Auf [supabase.com](https://supabase.com) ein kostenloses Projekt anlegen.
    **Region: Central EU (Frankfurt)** – dann bleiben die Daten in der EU.
-2. Im SQL-Editor den Inhalt von `supabase/migrations/0001_init.sql` ausführen.
-3. Unter *Authentication → Providers → Email* für einen Zwei-Personen-Haushalt
-   die Bestätigungs-E-Mail abschalten („Confirm email" aus). Sonst hängt die
-   Anmeldung am Mail-Versand, der im kostenlosen Tarif streng begrenzt ist.
+2. Im SQL-Editor den Inhalt von `supabase/migrations/0001_init.sql` ausführen,
+   danach `supabase/pruefung.sql` – dort muss überall `ok` stehen.
+3. Unter *Authentication → Sign In / Providers → Email* für einen
+   Zwei-Personen-Haushalt die Bestätigungs-E-Mail abschalten („Confirm email"
+   aus). Sonst hängt die Anmeldung am Mail-Versand, der im kostenlosen Tarif
+   streng begrenzt ist. Sind beide Konten angelegt, dort auch
+   *Allow new users to sign up* abschalten.
 4. Unter *Project Settings → API* `Project URL` und `anon public key` kopieren.
 
 Der `anon key` ist für den Browser gedacht und darf im Frontend stehen – den
@@ -105,7 +112,7 @@ erheblich einfacher.
 | `src/lib/` | Fachlogik ohne UI: Einheiten, Listen-Erzeugung, Rezept-Parser, Kategorien |
 | `src/data/` | IndexedDB, Supabase-Client, Sync-Store, Anmeldung |
 | `src/pages/` | Die fünf Bildschirme |
-| `supabase/migrations/` | Datenbankschema inklusive Rechte |
+| `supabase/` | Datenbankschema (`migrations/`), Prüf- und Rücksetz-Skript |
 | `scripts/` | Icon-Erzeugung und Durchstich-Test |
 
 ## Was nicht geht – und warum
