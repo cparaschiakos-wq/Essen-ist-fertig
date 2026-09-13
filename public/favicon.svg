@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Essen ist fertig">
+  <rect width="64" height="64" rx="14" fill="#c2410c"/>
+  <g fill="#faf7f2">
+    <rect x="12" y="28" width="40" height="6" rx="3"/>
+    <path d="M15 34a17 17 0 0 0 34 0z"/>
+    <circle cx="32" cy="25" r="3.4"/>
+  </g>
+  <g stroke="#fdece3" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.9">
+    <path d="M24 22c-2-3 2-5 0-8"/>
+    <path d="M32 18c-2-3 2-5 0-8"/>
+    <path d="M40 22c-2-3 2-5 0-8"/>
+  </g>
+</svg>

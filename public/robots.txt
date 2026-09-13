@@ -1,0 +1,3 @@
+# Private Familien-App - nichts hiervon gehört in eine Suchmaschine.
+User-agent: *
+Disallow: /
