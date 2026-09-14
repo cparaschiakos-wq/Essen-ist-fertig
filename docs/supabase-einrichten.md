@@ -29,9 +29,15 @@ auf deinem Rechner.
 
 1. In der linken Leiste auf **SQL Editor**.
 2. Auf **New query**.
-3. Die Datei `supabase/migrations/0001_init.sql` aus dem Repository öffnen,
-   **den gesamten Inhalt** kopieren und in das Eingabefeld einfügen.
-4. Auf **Run** klicken (oder `Strg`+`Enter`, auf dem Mac `Cmd`+`Enter`).
+3. Die Datei `supabase/migrations/0001_init.sql` **öffnen** – etwa mit
+   `cat supabase/migrations/0001_init.sql` oder im Editor – und **den Text
+   darin** kopieren.
+4. Diesen Text in das Eingabefeld einfügen und auf **Run** klicken
+   (oder `Strg`+`Enter`, auf dem Mac `Cmd`+`Enter`).
+
+> **Nicht den Dateinamen einfügen.** Der SQL-Editor erwartet SQL-Befehle, keinen
+> Pfad. Steht `supabase/migrations/0001_init.sql` im Editor, antwortet Postgres
+> mit `syntax error at or near "supabase"`.
 
 Erwartete Meldung: **Success. No rows returned.**
 
@@ -46,7 +52,7 @@ Nicht überspringen: Wenn hier etwas fehlt, merkst du es sonst erst, wenn die
 App sich seltsam verhält.
 
 1. Wieder **New query**.
-2. Inhalt von `supabase/pruefung.sql` einfügen und **Run**.
+2. Den **Text aus** `supabase/pruefung.sql` einfügen und **Run**.
 
 Es kommen sieben Zeilen zurück, und in der Spalte `status` muss überall `ok`
 stehen:
@@ -195,6 +201,7 @@ im Vollbild ohne Browser-Leiste.
 | Symptom | Ursache und Abhilfe |
 |---|---|
 | App zeigt oben **„Nur auf diesem Gerät"** | `.env.local` fehlt, ist falsch geschrieben, oder der Entwicklungsserver wurde nach dem Anlegen nicht neu gestartet. Die Variablen müssen genau `VITE_SUPABASE_URL` und `VITE_SUPABASE_ANON_KEY` heißen. |
+| **`syntax error at or near "supabase"`** | Im Editor steht der Dateiname statt des Dateiinhalts. Die Datei öffnen (`cat supabase/migrations/0001_init.sql`), den Text darin kopieren, das Eingabefeld leeren und den Text einfügen. |
 | **`relation "households" already exists`** beim Ausführen der Migration | Die Migration lief schon einmal. `supabase/pruefung.sql` ausführen; steht überall `ok`, ist alles in Ordnung und du kannst weitermachen. |
 | Anmeldung meldet **„Email not confirmed"** | Schritt 4 wurde übersprungen. Nachholen, dann erneut anmelden. |
 | **„Unbekannter Einladungscode"** | Der Code hat acht Zeichen; Groß- und Kleinschreibung sind egal. Bei dir unter *Mehr* nachsehen und neu kopieren. |
