@@ -3,8 +3,9 @@
 Dauer: etwa 15 Minuten. Danach laufen Rezepte, Wochenplan und Einkaufsliste
 synchron auf beiden Handys.
 
-Du brauchst: eine E-Mail-Adresse (oder ein GitHub-Konto) und das Repository
-auf deinem Rechner.
+Du brauchst: eine E-Mail-Adresse und ein GitHub-Konto. Einen lokalen
+Projektordner, Node.js oder ein Terminal brauchst du **nicht** – der Hoster baut
+die App direkt aus GitHub (Schritt 6).
 
 ---
 
@@ -111,43 +112,59 @@ weil die Datenbank das durchsetzt – nicht der Schlüssel.
 
 ---
 
-## Schritt 6 – In die App eintragen
+## Schritt 6 – App veröffentlichen
 
-Im Projektordner auf deinem Rechner:
+Der Hoster baut die App direkt aus GitHub. Kein lokaler Ordner, kein Terminal.
+
+1. [dash.cloudflare.com](https://dash.cloudflare.com) öffnen, kostenloses Konto
+   anlegen.
+2. **Workers & Pages** → **Create** → Reiter **Pages** → **Connect to Git**.
+3. GitHub verbinden, Repository **Essen-ist-fertig** auswählen.
+4. Build-Einstellungen:
+
+   | Feld | Wert |
+   |---|---|
+   | Production branch | `main` |
+   | Framework preset | Vite (oder *None*) |
+   | Build command | `npm run build` |
+   | Build output directory | `dist` |
+
+5. **Environment variables** aufklappen und die beiden Werte aus Schritt 5
+   eintragen – sie ersetzen hier die Datei `.env.local`:
+
+   | Variable name | Value |
+   |---|---|
+   | `VITE_SUPABASE_URL` | die Project URL, ohne `/rest/v1/` |
+   | `VITE_SUPABASE_ANON_KEY` | der anon public key |
+
+6. **Save and Deploy**. Der erste Bau dauert ein bis zwei Minuten.
+
+Am Ende steht dort eine Adresse wie `essen-ist-fertig.pages.dev`. Jeder weitere
+Push auf `main` baut automatisch neu.
+
+`public/_redirects` sorgt dafür, dass auch der direkte Aufruf von `/liste` oder
+`/rezepte` funktioniert; ohne diese Weiterleitung antwortet ein statischer
+Hoster dort mit 404.
+
+### Alternative: lokal entwickeln
+
+Nur nötig, wenn du am Code arbeiten willst. Dann Node.js 22 und Git
+installieren, das Repository klonen und im Projektordner:
 
 ```bash
-cp .env.example .env.local
-```
-
-`.env.local` öffnen und die beiden Werte eintragen:
-
-```
-VITE_SUPABASE_URL=https://abcdefgh.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOi...
-```
-
-Für eine Veröffentlichung bei Vercel, Netlify oder Cloudflare Pages gehören
-dieselben zwei Werte in die **Environment Variables** des Hosters – dort gibt es
-keine `.env.local`.
-
-Dann starten:
-
-```bash
+cp .env.example .env.local   # beide Werte eintragen
 npm install
 npm run dev
 ```
 
-> **Wichtig:** Wenn der Entwicklungsserver schon lief, musst du ihn **neu
-> starten**. Die Datei `.env.local` wird nur beim Start gelesen.
-
-`.env.local` ist bereits von der Versionsverwaltung ausgenommen und landet
-nicht auf GitHub.
+> `.env.local` wird nur beim Start gelesen – lief der Server schon, neu starten.
+> Die Datei ist von der Versionsverwaltung ausgenommen und landet nicht auf GitHub.
 
 ---
 
 ## Schritt 7 – Dein Konto und den Haushalt anlegen
 
-1. Die angezeigte Adresse im Browser öffnen (meist `http://localhost:5173`).
+1. Eure neue Adresse (`…pages.dev`) im Browser öffnen.
 2. **Registrieren** – E-Mail und ein Passwort mit mindestens 8 Zeichen.
 3. Danach kommt der Bildschirm *Haushalt einrichten*. Einen Namen eingeben und
    auf **Neuen Haushalt anlegen**.
@@ -189,18 +206,16 @@ Registrierung kurz wieder ein und danach wieder aus.
 
 ## Schritt 10 – Auf die Handys bringen
 
-```bash
-npm run build
-```
+Auf **beiden** Handys jeweils einmal:
 
-Den entstandenen Ordner `dist/` bei einem statischen Hoster veröffentlichen –
-Cloudflare Pages, Vercel oder Netlify, alle mit ausreichendem kostenlosem
-Kontingent. Voraussetzung ist **HTTPS**; ohne das gibt es keinen Service Worker
-und damit keinen Offline-Betrieb im Supermarkt.
+1. Die `…pages.dev`-Adresse in **Chrome** öffnen.
+2. Menü (drei Punkte) → **Zum Startbildschirm hinzufügen**.
 
-Auf dem Handy: Adresse in **Chrome** öffnen → Menü (drei Punkte) → **Zum
-Startbildschirm hinzufügen**. Danach hat die App ein eigenes Icon und startet
-im Vollbild ohne Browser-Leiste.
+Danach hat die App ein eigenes Icon, startet im Vollbild ohne Browser-Leiste
+und funktioniert im Supermarkt auch ohne Empfang.
+
+Probe aufs Exempel: Flugmodus an, etwas abhaken, Flugmodus aus – der Haken
+wandert zum anderen Handy.
 
 ---
 
@@ -209,12 +224,13 @@ im Vollbild ohne Browser-Leiste.
 | Symptom | Ursache und Abhilfe |
 |---|---|
 | Anfragen laufen ins Leere, Adressen enthalten `/rest/v1/rest/v1` | In `VITE_SUPABASE_URL` steht die REST-Adresse statt der Basis-Adresse. Alles ab `/rest/v1` streichen. |
-| App zeigt oben **„Nur auf diesem Gerät"** | `.env.local` fehlt, ist falsch geschrieben, oder der Entwicklungsserver wurde nach dem Anlegen nicht neu gestartet. Die Variablen müssen genau `VITE_SUPABASE_URL` und `VITE_SUPABASE_ANON_KEY` heißen. |
+| App zeigt oben **„Nur auf diesem Gerät"** | Die beiden Variablen fehlen oder sind falsch geschrieben. Sie müssen genau `VITE_SUPABASE_URL` und `VITE_SUPABASE_ANON_KEY` heißen – beim Hoster unter *Environment variables*, lokal in `.env.local`. Beim Hoster danach **Retry deployment**, lokal den Dev-Server neu starten: beides liest die Werte nur beim Bauen bzw. beim Start. |
 | **`syntax error at or near "supabase"`** | Im Editor steht der Dateiname statt des Dateiinhalts. Die Datei öffnen (`cat supabase/migrations/0001_init.sql`), den Text darin kopieren, das Eingabefeld leeren und den Text einfügen. |
 | **`relation "households" already exists`** beim Ausführen der Migration | Die Migration lief schon einmal. `supabase/pruefung.sql` ausführen; steht überall `ok`, ist alles in Ordnung und du kannst weitermachen. |
 | Anmeldung meldet **„Email not confirmed"** | Schritt 4 wurde übersprungen. Nachholen, dann erneut anmelden. |
 | **„Unbekannter Einladungscode"** | Der Code hat acht Zeichen; Groß- und Kleinschreibung sind egal. Bei dir unter *Mehr* nachsehen und neu kopieren. |
 | Oben steht **„Sync-Fehler"**, darunter *permission denied* | Die Zugriffsregeln fehlen. `supabase/pruefung.sql` ausführen und der Anweisung bei `FEHLT` folgen. |
+| Direkter Aufruf von `/liste` ergibt 404 | `public/_redirects` fehlt im Build oder der Hoster wertet die Datei nicht aus. Bei Vercel wird stattdessen eine `vercel.json` mit einer Rewrite-Regel auf `/index.html` gebraucht. |
 | Nach dem Urlaub lädt nichts mehr | Kostenlose Projekte werden nach etwa einer Woche ohne Zugriff pausiert. Im Supabase-Dashboard auf **Restore project**, nach ein paar Minuten läuft alles weiter. Die Daten bleiben erhalten. |
 | Liste erscheint auf dem anderen Handy nicht | Prüfen, ob die Zeile *Live-Aktualisierung eingeschaltet* im Prüfskript `ok` meldet. Ansonsten hilft meist, die App kurz zu schließen und wieder zu öffnen – beim Wechsel in den Vordergrund wird abgeglichen. |
 
