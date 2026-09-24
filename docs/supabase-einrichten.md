@@ -93,7 +93,11 @@ abgeschaltet – das schützt wirksamer.
 
 1. Unten links auf **Project Settings** (Zahnrad) → **API**.
 2. Zwei Werte kopieren:
-   - **Project URL** – sieht aus wie `https://abcdefgh.supabase.co`
+   - **Project URL** – nur die Basis-Adresse, `https://abcdefgh.supabase.co`.
+     **Ohne Pfad.** An manchen Stellen im Dashboard steht die fertige
+     REST-Adresse `https://abcdefgh.supabase.co/rest/v1/` – die ist hier falsch,
+     denn den Pfad hängt die App selbst an. (Die App kürzt das inzwischen
+     selbst und schreibt eine Warnung in die Browser-Konsole.)
    - **anon public** – ein sehr langer Schlüssel. In neueren Projekten heißt
      der Abschnitt **Legacy API keys**, oder es gibt zusätzlich einen
      *publishable key*; beide funktionieren.
@@ -121,6 +125,10 @@ cp .env.example .env.local
 VITE_SUPABASE_URL=https://abcdefgh.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOi...
 ```
+
+Für eine Veröffentlichung bei Vercel, Netlify oder Cloudflare Pages gehören
+dieselben zwei Werte in die **Environment Variables** des Hosters – dort gibt es
+keine `.env.local`.
 
 Dann starten:
 
@@ -200,6 +208,7 @@ im Vollbild ohne Browser-Leiste.
 
 | Symptom | Ursache und Abhilfe |
 |---|---|
+| Anfragen laufen ins Leere, Adressen enthalten `/rest/v1/rest/v1` | In `VITE_SUPABASE_URL` steht die REST-Adresse statt der Basis-Adresse. Alles ab `/rest/v1` streichen. |
 | App zeigt oben **„Nur auf diesem Gerät"** | `.env.local` fehlt, ist falsch geschrieben, oder der Entwicklungsserver wurde nach dem Anlegen nicht neu gestartet. Die Variablen müssen genau `VITE_SUPABASE_URL` und `VITE_SUPABASE_ANON_KEY` heißen. |
 | **`syntax error at or near "supabase"`** | Im Editor steht der Dateiname statt des Dateiinhalts. Die Datei öffnen (`cat supabase/migrations/0001_init.sql`), den Text darin kopieren, das Eingabefeld leeren und den Text einfügen. |
 | **`relation "households" already exists`** beim Ausführen der Migration | Die Migration lief schon einmal. `supabase/pruefung.sql` ausführen; steht überall `ok`, ist alles in Ordnung und du kannst weitermachen. |
