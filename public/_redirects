@@ -1,0 +1,5 @@
+# Single-Page-App: Alle Adressen liefern index.html aus, das Routing macht
+# der Browser. Ohne diese Zeile antwortet Cloudflare Pages auf einen direkten
+# Aufruf von /liste oder /rezepte mit 404 - also genau dann, wenn jemand die
+# App vom Startbildschirm öffnet oder die Seite neu lädt.
+/*  /index.html  200
